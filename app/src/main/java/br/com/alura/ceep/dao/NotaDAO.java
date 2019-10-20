@@ -13,20 +13,17 @@ import br.com.alura.ceep.model.Nota;
 @Dao
 public interface NotaDAO {
 
-    @Query("SELECT * FROM nota")
+    @Query("SELECT * FROM nota order by position")
     List<Nota> getAll();
 
-    @Query("SELECT * FROM nota WHERE nid IN (:notaIds)")
-    List<Nota> loadAllByIds(int[] notaIds);
-
-    @Query("DELETE FROM nota WHERE nid = :nIds")
-    void deleteId(long nIds);
-
     @Insert
-    long insertAll(Nota notas);
+    long insert(Nota nota);
 
     @Update
-    void updateNota(Nota nota);
+    void update(Nota nota);
+
+    @Update
+    void updateAll(List<Nota> notas);
 
     @Delete
     void delete(Nota nota);

@@ -24,9 +24,19 @@ import br.com.alura.ceep.model.Nota;
 import br.com.alura.ceep.ui.recyclerview.adapter.ListaCoresAdapter;
 import br.com.alura.ceep.ui.recyclerview.adapter.listener.OnItemCorClickListener;
 
+import static br.com.alura.ceep.constantes.Constantes.AMARELO;
+import static br.com.alura.ceep.constantes.Constantes.AZUL;
+import static br.com.alura.ceep.constantes.Constantes.BRANCO;
 import static br.com.alura.ceep.constantes.Constantes.CHAVE_NOTA;
 import static br.com.alura.ceep.constantes.Constantes.CHAVE_POSICAO;
+import static br.com.alura.ceep.constantes.Constantes.CINZA;
+import static br.com.alura.ceep.constantes.Constantes.DEFAULT_COLOR;
+import static br.com.alura.ceep.constantes.Constantes.LILÁS;
+import static br.com.alura.ceep.constantes.Constantes.MARROM;
 import static br.com.alura.ceep.constantes.Constantes.POSICAO_INVALIDA;
+import static br.com.alura.ceep.constantes.Constantes.ROXO;
+import static br.com.alura.ceep.constantes.Constantes.VERDE;
+import static br.com.alura.ceep.constantes.Constantes.VERMELHO;
 
 public class FormularioNotaActivity extends AppCompatActivity {
 
@@ -37,6 +47,7 @@ public class FormularioNotaActivity extends AppCompatActivity {
     private TextView titulo;
     private TextView descricao;
     private int cor;
+    private long nId;
     private List<CoresNota> coresNotaList = new ArrayList<>();
 
     @Override
@@ -52,10 +63,13 @@ public class FormularioNotaActivity extends AppCompatActivity {
             setTitle(TITULO_APPBAR_ALTERA);
             Nota notaRecebida = (Nota) dadosRecebidos
                     .getSerializableExtra(CHAVE_NOTA);
+            nId = notaRecebida.nid;
             posicaoRecibida = dadosRecebidos.getIntExtra(CHAVE_POSICAO, POSICAO_INVALIDA);
             preencheCampos(notaRecebida);
             mudarCorBackground(notaRecebida.getCor());
         }else{
+            nId = 0;
+            posicaoRecibida = dadosRecebidos.getIntExtra(CHAVE_POSICAO, POSICAO_INVALIDA);
             mudarCorBackground(R.color.BRANCO); //Padrão
         }
 
@@ -78,34 +92,34 @@ public class FormularioNotaActivity extends AppCompatActivity {
         String name;
         switch (cor){
             case R.color.AZUL:
-                name = this.getResources().getString(R.string.AZUL);
+                name = AZUL;
                 break;
             case R.color.BRANCO:
-                name = this.getResources().getString(R.string.BRANCO);
+                name = BRANCO;
                 break;
             case R.color.VERMELHO:
-                name = this.getResources().getString(R.string.VERMELHO);
+                name = VERMELHO;
                 break;
             case R.color.VERDE:
-                name = this.getResources().getString(R.string.VERDE);
+                name = VERDE;
                 break;
             case R.color.AMARELO:
-                name = this.getResources().getString(R.string.AMARELO);
+                name = AMARELO;
                 break;
             case R.color.LILÁS:
-                name = this.getResources().getString(R.string.LILÁS);
+                name = LILÁS;
                 break;
             case R.color.CINZA:
-                name = this.getResources().getString(R.string.CINZA);
+                name = CINZA;
                 break;
             case R.color.MARROM:
-                name = this.getResources().getString(R.string.MARROM);
+                name = MARROM;
                 break;
             case R.color.ROXO:
-                name = this.getResources().getString(R.string.ROXO);
+                name = ROXO;
                 break;
             default:
-                name = "Cor não encontrada";
+                name = DEFAULT_COLOR;
         }
         return name;
     }
@@ -165,9 +179,12 @@ public class FormularioNotaActivity extends AppCompatActivity {
 
     @NonNull
     private Nota criaNota() {
-        return new Nota(titulo.getText().toString(),
+        return new Nota(nId,
+                        titulo.getText().toString(),
                         descricao.getText().toString(),
-                        cor);
+                        cor,
+                        posicaoRecibida
+                        );
     }
 
     private boolean ehMenuSalvaNota(MenuItem item) {

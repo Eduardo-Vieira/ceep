@@ -1,18 +1,5 @@
 <resources>
     <string name="app_name">Ceep</string>
-    <string name="pref_key">ceepSharedPreferences</string>
-    <string name="pref_text">typeRecyclerVLayoutView</string>
-    <string name="pref_text_primeiro_acesso">primeiroAcesso</string>
-    <string name="AZUL">AZUL</string>
-    <string name="BRANCO">BRANCO</string>
-    <string name="VERMELHO">VERMELHO</string>
-    <string name="VERDE">VERDE</string>
-    <string name="AMARELO">AMARELO</string>
-    <string name="LILÁS">LILÁS</string>
-    <string name="CINZA">CINZA</string>
-    <string name="MARROM">MARROM</string>
-    <string name="ROXO">ROXO</string>
-
     <string name="legenda_feedback">Deixe o seu feedback!:)</string>
     <string name="mensagem_feedback">Envie  dúvidas ou sugestões sobre sua experiência com o Ceep. Usaremos as informações fornecidas para aprimorar a experiência da App.</string>
     <string name="email_feedback">e-mail</string>

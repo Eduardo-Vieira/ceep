@@ -1,5 +1,7 @@
 package br.com.alura.ceep.model;
 
+import android.util.Log;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -20,10 +22,15 @@ public class Nota implements Serializable {
     @ColumnInfo(name = "cor")
     public int cor;
 
-    public Nota(String titulo, String descricao, int cor) {
+    @ColumnInfo(name = "position")
+    public long position;
+
+    public Nota(long nid, String titulo, String descricao, int cor, long position) {
+        this.nid = nid;
         this.titulo = titulo;
         this.descricao = descricao;
         this.cor = cor;
+        this.position = position;
     }
 
     public String getTitulo() {
@@ -36,11 +43,9 @@ public class Nota implements Serializable {
 
     public int getCor() { return cor; }
 
-    public long getNid() {
-        return nid;
-    }
-
     public void setNid(long nid){
         this.nid = nid;
     }
+
+    public void setPosition(long position){ this.position = position; }
 }

@@ -3,7 +3,6 @@ package br.com.alura.ceep.ui.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.Menu;
@@ -21,15 +20,20 @@ import java.util.List;
 
 import br.com.alura.ceep.R;
 import br.com.alura.ceep.database.AppDatabase;
+import br.com.alura.ceep.database.CeepSharedPreferences;
 import br.com.alura.ceep.model.Nota;
 import br.com.alura.ceep.ui.recyclerview.adapter.ListaNotasAdapter;
 import br.com.alura.ceep.ui.recyclerview.adapter.listener.OnItemClickListener;
 import br.com.alura.ceep.ui.recyclerview.helper.callback.NotaItemTouchHelperCallback;
 
+import static br.com.alura.ceep.constantes.Constantes.CEEP_SHARED_PREF_DEFVALUE;
 import static br.com.alura.ceep.constantes.Constantes.CHAVE_NOTA;
 import static br.com.alura.ceep.constantes.Constantes.CHAVE_POSICAO;
 import static br.com.alura.ceep.constantes.Constantes.CODIGO_REQUISICAO_ALTERA_NOTA;
 import static br.com.alura.ceep.constantes.Constantes.CODIGO_REQUISICAO_INSERE_NOTA;
+import static br.com.alura.ceep.constantes.Constantes.ITEM_ICON_MENU_DEFVALUE;
+import static br.com.alura.ceep.constantes.Constantes.ITEM_ICON_MENU_LIST;
+import static br.com.alura.ceep.constantes.Constantes.ITEM_ICON_MENU_STAGGERD;
 import static br.com.alura.ceep.constantes.Constantes.POSICAO_INVALIDA;
 
 public class ListaNotasActivity extends AppCompatActivity {
@@ -52,16 +56,6 @@ public class ListaNotasActivity extends AppCompatActivity {
         configuraRecyclerView(todasNotas);
         configuraBotaoInsereNota();
 
-    }
-
-    private String ceepSharedPreferences(String prefValue) {
-        SharedPreferences ceepSharedPreferences = getSharedPreferences(getString(R.string.pref_key), Context.MODE_PRIVATE);
-        if(!prefValue.equals("")){
-            SharedPreferences.Editor editor = ceepSharedPreferences.edit();
-            editor.putString(getString(R.string.pref_text),prefValue);
-            editor.apply();
-        }
-        return ceepSharedPreferences.getString(getString(R.string.pref_text),"list");
     }
 
     @Override
@@ -89,9 +83,11 @@ public class ListaNotasActivity extends AppCompatActivity {
     }
 
     private void vaiParaFormularioNotaActivityInsere() {
+        long posicao = adapter.getItemCount();
         Intent iniciaFormularioNota =
                 new Intent(ListaNotasActivity.this,
                         FormularioNotaActivity.class);
+        iniciaFormularioNota.putExtra(CHAVE_POSICAO, posicao);
         startActivityForResult(iniciaFormularioNota,
                 CODIGO_REQUISICAO_INSERE_NOTA);
     }
@@ -110,12 +106,12 @@ public class ListaNotasActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.lista_notas_recyclerview:
-                if(typeRecyclerVLayoutView.equals("list")) {
-                    setIconMenuItem(item,"Staggered");
-                    setRecyclerLayoutView("Staggered");
+                if(typeRecyclerVLayoutView.equals(CEEP_SHARED_PREF_DEFVALUE)) {
+                    setIconMenuItem(item, ITEM_ICON_MENU_STAGGERD);
+                    setRecyclerLayoutView(ITEM_ICON_MENU_STAGGERD);
                 }else{
-                    setIconMenuItem(item,"list");
-                    setRecyclerLayoutView("list");
+                    setIconMenuItem(item, ITEM_ICON_MENU_LIST);
+                    setRecyclerLayoutView(ITEM_ICON_MENU_LIST);
                 }
                 break;
             default:
@@ -127,7 +123,7 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     private void setRecyclerLayoutView(String typeView){
         RecyclerView listaNotas = findViewById(R.id.lista_notas_recyclerview);
-        typeRecyclerVLayoutView = ceepSharedPreferences(typeView);
+        typeRecyclerVLayoutView = CeepSharedPreferences.setTypeRecyclerVLayoutView(getApplicationContext(),typeView);
         if(typeView.equals("Staggered")) {
             layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
             listaNotas.setLayoutManager(layoutManager);
@@ -138,7 +134,7 @@ public class ListaNotasActivity extends AppCompatActivity {
     }
 
     private void setIconMenuItem(MenuItem item, String type){
-        if(type.equals("list")) {
+        if(type.equals(ITEM_ICON_MENU_DEFVALUE)) {
             item.setIcon(R.drawable.ic_view_list);
         }else{
             item.setIcon(R.drawable.ic_view_quilt);
@@ -147,10 +143,14 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        typeRecyclerVLayoutView = ceepSharedPreferences("");
+        mudarTipoDoLayoutView(menu);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void mudarTipoDoLayoutView(Menu menu){
+        typeRecyclerVLayoutView = CeepSharedPreferences.getTypeRecyclerVLayoutView(getApplicationContext());
         setRecyclerLayoutView(typeRecyclerVLayoutView);
         setIconMenuItem(menu.findItem(R.id.lista_notas_recyclerview), typeRecyclerVLayoutView);
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -177,13 +177,13 @@ public class ListaNotasActivity extends AppCompatActivity {
     }
 
     private static Nota addNota(final AppDatabase db, Nota nota) {
-        long id = db.notaDao().insertAll(nota);
-        nota.setNid(id);
-        return nota;
+       long id = db.notaDao().insert(nota);
+       nota.setNid(id);
+       return nota;
     }
 
     private static Nota updateNota(final AppDatabase db, Nota nota) {
-        db.notaDao().updateNota(nota);
+        db.notaDao().update(nota);
         return nota;
     }
 
