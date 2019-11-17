@@ -2,10 +2,12 @@ package br.com.alura.ceep.ui.recyclerview.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
@@ -20,6 +22,7 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
     private final List<Nota> notas;
     private final Context context;
     private OnItemClickListener onItemClickListener;
+
 
     public ListaNotasAdapter(Context context, List<Nota> notas) {
         this.context = context;
@@ -38,7 +41,7 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
     }
 
     @Override
-    public void onBindViewHolder(ListaNotasAdapter.NotaViewHolder holder, int position) {
+    public void onBindViewHolder(final ListaNotasAdapter.NotaViewHolder holder, int position) {
         Nota nota = notas.get(position);
         holder.vincula(nota);
     }
@@ -57,20 +60,16 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
         notifyDataSetChanged();
     }
 
-    public void notifyDataSetChangedMoved(){
-        notifyDataSetChanged();
-    }
-
     public void remove(int posicao) {
         notas.remove(posicao);
-        notifyItemRemoved(posicao);
+        notifyDataSetChanged();
     }
 
     public List<Nota> troca(int posicaoInicial, int posicaoFinal) {
         notas.get(posicaoInicial).setPosition(posicaoFinal);
         notas.get(posicaoFinal).setPosition(posicaoInicial);
         Collections.swap(notas, posicaoInicial, posicaoFinal);
-        notifyItemMoved(posicaoInicial, posicaoFinal);
+        notifyDataSetChanged();
         return notas;
     }
 

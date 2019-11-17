@@ -93,7 +93,8 @@ public class ListaNotasActivity extends AppCompatActivity {
     }
 
     private List<Nota> pegaTodasNotas() {
-        return AppDatabase.getAppDatabase(this).notaDao().getAll();
+        return AppDatabase.getAppDatabase(this)
+                .notaDao().getAll();
     }
 
     @Override
@@ -123,8 +124,9 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     private void setRecyclerLayoutView(String typeView){
         RecyclerView listaNotas = findViewById(R.id.lista_notas_recyclerview);
-        typeRecyclerVLayoutView = CeepSharedPreferences.setTypeRecyclerVLayoutView(getApplicationContext(),typeView);
-        if(typeView.equals("Staggered")) {
+        typeRecyclerVLayoutView = CeepSharedPreferences
+                .setTypeRecyclerVLayoutView(getApplicationContext(),typeView);
+        if(typeView.equals(ITEM_ICON_MENU_STAGGERD)) {
             layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
             listaNotas.setLayoutManager(layoutManager);
             listaNotas.setHasFixedSize(true);
@@ -148,7 +150,8 @@ public class ListaNotasActivity extends AppCompatActivity {
     }
 
     private void mudarTipoDoLayoutView(Menu menu){
-        typeRecyclerVLayoutView = CeepSharedPreferences.getTypeRecyclerVLayoutView(getApplicationContext());
+        typeRecyclerVLayoutView = CeepSharedPreferences
+                .getTypeRecyclerVLayoutView(getApplicationContext());
         setRecyclerLayoutView(typeRecyclerVLayoutView);
         setIconMenuItem(menu.findItem(R.id.lista_notas_recyclerview), typeRecyclerVLayoutView);
     }
@@ -157,14 +160,11 @@ public class ListaNotasActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (ehResultadoInsereNota(requestCode, data)) {
-
             if (resultadoOk(resultCode)) {
                 Nota notaRecebida = (Nota) data.getSerializableExtra(CHAVE_NOTA);
                 adiciona(notaRecebida);
             }
-
         }
-
         if (ehResultadoAlteraNota(requestCode, data)) {
             if (resultadoOk(resultCode)) {
                 Nota notaRecebida = (Nota) data.getSerializableExtra(CHAVE_NOTA);

@@ -32,7 +32,6 @@
             android:maxLines="6"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/item_nota_titulo"
             app:layout_constraintTop_toBottomOf="@id/item_nota_titulo"
             tools:text="Descrição" />
